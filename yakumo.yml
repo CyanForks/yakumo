@@ -3,11 +3,6 @@
     name: yakumo
 - id: yucjhz
   name: yakumo
-  config:
-    pipeline:
-      build:
-        - tsc
-        - esbuild
 - id: z5wmiv
   name: yakumo-esbuild
 - id: f2iw3r

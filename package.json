@@ -12,9 +12,9 @@
   ],
   "license": "MIT",
   "scripts": {
-    "yakumo": "node --import tsx packages/core/src/cli",
-    "build": "yarn yakumo build",
     "lint": "eslint --cache",
+    "yakumo": "node --import tsx packages/core/src/cli",
+    "build": "yarn yakumo esbuild && yarn yakumo tsc",
     "test": "yarn yakumo test default/index --import tsx",
     "test:text": "shx rm -rf coverage && c8 -r text yarn test",
     "test:json": "shx rm -rf coverage && c8 -r json yarn test",
@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@cordisjs/eslint-config": "^1.1.1",
-    "@cordisjs/plugin-cli": "^1.0.2",
+    "@cordisjs/plugin-cli": "^1.0.3",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.3.5",
     "c8": "^10.1.3",

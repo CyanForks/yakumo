@@ -12,27 +12,27 @@ for (let i = 2; i < process.argv.length; i++) {
 }
 
 const { Context } = await import('cordis')
-const { Loader } = await import('@cordisjs/plugin-loader')
+const { default: Loader } = await import('@cordisjs/plugin-loader')
+const { default: Include } = await import('@cordisjs/plugin-include')
+const { default: Cli } = await import('@cordisjs/plugin-cli')
 
 const ctx = new Context()
 await ctx.plugin(Loader)
-
-await ctx.loader.create({
-  name: '@cordisjs/plugin-include',
-  config: {
-    path: './yakumo.yml',
-    initial: [
-      { name: '@cordisjs/plugin-cli', config: { name: 'yakumo' } },
-      { name: 'yakumo' },
-      { name: 'yakumo/list' },
-      { name: 'yakumo/prepare' },
-      { name: 'yakumo/publish' },
-      { name: 'yakumo/run' },
-      { name: 'yakumo/test' },
-      { name: 'yakumo/upgrade' },
-      { name: 'yakumo/version' },
-    ],
-  },
+await ctx.plugin(Include, {
+  path: './yakumo.yml',
+  initial: [
+    { name: 'yakumo' },
+    { name: 'yakumo/list' },
+    { name: 'yakumo/prepare' },
+    { name: 'yakumo/publish' },
+    { name: 'yakumo/run' },
+    { name: 'yakumo/test' },
+    { name: 'yakumo/upgrade' },
+    { name: 'yakumo/version' },
+  ],
+})
+await ctx.plugin(Cli, {
+  name: 'yakumo',
 })
 
 export {}

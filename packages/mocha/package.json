@@ -34,12 +34,12 @@
   },
   "peerDependencies": {
     "mocha": "^11",
-    "yakumo": "^3.0.2"
+    "yakumo": "^3.0.3"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "mocha": "^11.7.5",
-    "yakumo": "^3.0.2"
+    "yakumo": "^3.0.3"
   },
   "dependencies": {
     "globby": "^14.1.0",
