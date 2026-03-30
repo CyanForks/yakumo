@@ -7,8 +7,12 @@ export const inject = ['yakumo', 'cli']
 
 export function apply(ctx: Context) {
   ctx.cli
-    .command('mocha [...packages]', 'Run tests with mocha')
-    .action(async ({ args }) => {
+    .command('mocha [...packages]', 'Run tests with mocha', { unknownOption: 'allow' })
+    .option('-t, --timeout [timeout:integer]', 'Test-case timeout in milliseconds')
+    .option('-s, --slow [slow:integer]', '"Slow" test threshold in milliseconds')
+    .option('-b, --bail', 'Abort after first failure')
+    .option('--retries [retries:integer]', 'Number of times to retry failed tests')
+    .action(async ({ args, options }) => {
       await ctx.yakumo.initialize()
 
       function getFiles(names: string[]) {
@@ -28,8 +32,14 @@ export function apply(ctx: Context) {
         ignore: ['**/node_modules/**'],
       })
 
-      // TODO inherit mocha options
-      const mocha = new Mocha()
+      // TODO: more mocha options
+      const mocha = new Mocha({
+        bail: options.bail,
+        retries: options.retries,
+        slow: options.slow,
+        timeout: options.timeout,
+      })
+
       for (const file of files) {
         mocha.addFile(file)
       }
