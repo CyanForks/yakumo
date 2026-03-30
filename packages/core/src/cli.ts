@@ -22,17 +22,11 @@ await ctx.plugin(Include, {
   path: './yakumo.yml',
   initial: [
     { name: 'yakumo' },
-    { name: 'yakumo/list' },
-    { name: 'yakumo/prepare' },
-    { name: 'yakumo/publish' },
-    { name: 'yakumo/run' },
-    { name: 'yakumo/test' },
-    { name: 'yakumo/upgrade' },
-    { name: 'yakumo/version' },
   ],
 })
 await ctx.plugin(Cli, {
   name: 'yakumo',
 })
+await ctx.cli.executeArgv()
 
 export {}

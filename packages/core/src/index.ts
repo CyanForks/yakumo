@@ -6,6 +6,13 @@ import { manager, spawnAsync } from './utils.ts'
 import { promises as fs, readFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { deduplicate, Dict, isNonNullable, makeArray } from 'cosmokit'
+import * as list from './plugins/list.ts'
+import * as prepare from './plugins/prepare.ts'
+import * as publish from './plugins/publish.ts'
+import * as run from './plugins/run.ts'
+import * as test from './plugins/test.ts'
+import * as upgrade from './plugins/upgrade.ts'
+import * as version from './plugins/version.ts'
 
 export * from 'cordis'
 export * from './utils.ts'
@@ -106,6 +113,14 @@ export default class Yakumo extends Service {
           }
         })
     }
+
+    list.apply(ctx)
+    prepare.apply(ctx)
+    publish.apply(ctx)
+    run.apply(ctx)
+    test.apply(ctx)
+    upgrade.apply(ctx)
+    version.apply(ctx)
   }
 
   async initialize() {
