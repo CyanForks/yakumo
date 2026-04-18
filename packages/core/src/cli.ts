@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { pathToFileURL } from 'node:url'
+
 for (let i = 2; i < process.argv.length; i++) {
   if (!process.argv[i].startsWith('--import')) continue
   const [arg] = process.argv.splice(i, 1)
@@ -17,6 +19,8 @@ const { default: Include } = await import('@cordisjs/plugin-include')
 const { default: Cli } = await import('@cordisjs/plugin-cli')
 
 const ctx = new Context()
+ctx.baseUrl = pathToFileURL(process.cwd()).href + '/'
+
 await ctx.plugin(Loader)
 await ctx.plugin(Include, {
   path: './yakumo.yml',

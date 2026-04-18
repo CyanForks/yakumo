@@ -1,7 +1,7 @@
 {
   "name": "yakumo",
   "description": "Manage complex workspaces with ease",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "type": "module",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -53,9 +53,9 @@
   },
   "dependencies": {
     "@cordisjs/plugin-cli": "^1.1.0",
-    "@cordisjs/plugin-include": "^1.0.2",
-    "@cordisjs/plugin-loader": "^1.0.0-rc.0",
-    "cordis": "^4.0.0-rc.0",
+    "@cordisjs/plugin-include": "^1.0.3",
+    "@cordisjs/plugin-loader": "^1.0.0-rc.2",
+    "cordis": "^4.0.0-rc.3",
     "cosmokit": "^1.8.1",
     "detect-indent": "^7.0.2",
     "execa": "^9.6.1",
