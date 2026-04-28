@@ -54,8 +54,8 @@
   "dependencies": {
     "@cordisjs/plugin-cli": "^1.1.0",
     "@cordisjs/plugin-include": "^1.0.3",
-    "@cordisjs/plugin-loader": "^1.0.0-rc.2",
-    "cordis": "^4.0.0-rc.3",
+    "@cordisjs/plugin-loader": "^1.0.0-rc.3",
+    "cordis": "^4.0.0-rc.4",
     "cosmokit": "^1.8.1",
     "detect-indent": "^7.0.2",
     "execa": "^9.6.1",
