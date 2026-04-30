@@ -52,7 +52,7 @@ export function apply(ctx: Context, config: Config = {}) {
         updateProgress()
         if (!remote) return
         const newVersion = selectVersion(remote, oldRange)!
-        const lastestVersion = selectVersion(remote, options.next ? '' : 'latest')
+        const latestVersion = selectVersion(remote, options.next ? '' : 'latest')
         try {
           if (!gt(newVersion, oldVersion)) return
         } catch (error) {
@@ -60,7 +60,7 @@ export function apply(ctx: Context, config: Config = {}) {
           return
         }
         const newRange = oldRange[0] + newVersion
-        const suffix = newVersion === lastestVersion ? '' : ` (latest: ${lastestVersion})`
+        const suffix = newVersion === latestVersion ? '' : ` (latest: ${latestVersion})`
         output.push(`- ${kleur.yellow(dep)}: ${kleur.cyan(oldVersion)} -> ${kleur.green(newVersion)}${suffix}`)
         for (const name in deps[request]) {
           Object.defineProperty(ctx.yakumo.workspaces[name], '$dirty', { value: true })
