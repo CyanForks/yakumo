@@ -197,15 +197,33 @@ export default class Yakumo extends Service {
       if (results.length) return results
     }
 
-    const targets = Object.keys(this.workspaces).filter((folder) => {
-      if (!filter(this.workspaces[folder], folder)) return
-      return folder.endsWith('/' + name)
-    })
+    const folderMatches: string[] = []
+    const nameMatches: string[] = []
+    for (const folder in this.workspaces) {
+      const meta = this.workspaces[folder]
+      if (!filter(meta, folder)) continue
+      if (folder.slice(folder.lastIndexOf('/') + 1) === name) {
+        folderMatches.push(folder)
+      } else if (meta.name === name) {
+        nameMatches.push(folder)
+      }
+    }
+    const targets = deduplicate([...folderMatches, ...nameMatches])
 
     if (!targets.length) {
       throw new Error(`cannot find workspace "${name}"`)
     } else if (targets.length > 1) {
-      throw new Error(`ambiguous workspace "${name}": ${targets.join(', ')}`)
+      const lines = targets.map((path) => {
+        const meta = this.workspaces[path]
+        return meta.name === name && path.slice(path.lastIndexOf('/') + 1) !== name
+          ? `  - package "${name}" at ${path}`
+          : `  - folder ${path} (package "${meta.name}")`
+      })
+      const onlyFolders = nameMatches.length === 0
+      const hint = onlyFolders
+        ? `hint: disambiguate by package name (${folderMatches.map((p) => `"${this.workspaces[p].name}"`).join(', ')}) or add an alias in yakumo.yml`
+        : `hint: add an alias in yakumo.yml to disambiguate`
+      throw new Error(`ambiguous name "${name}":\n${lines.join('\n')}\n${hint}`)
     }
 
     return targets
