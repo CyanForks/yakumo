@@ -1,7 +1,7 @@
 {
   "name": "yakumo-vitest",
   "description": "Vitest support for Yakumo",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -34,14 +34,17 @@
     ]
   },
   "peerDependencies": {
-    "vitest": "^3 || ^4",
+    "vite": "^6 || ^7",
+    "vitest": "^4",
     "yakumo": "^3.2.0"
   },
   "devDependencies": {
+    "vite": "^7.3.2",
     "vitest": "^4.1.5",
     "yakumo": "^3.2.0"
   },
   "dependencies": {
-    "globby": "^14.1.0"
+    "globby": "^14.1.0",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
