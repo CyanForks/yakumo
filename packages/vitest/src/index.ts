@@ -1,6 +1,7 @@
 import { Context } from 'yakumo'
 import type {} from '@cordisjs/plugin-cli'
 import { startVitest } from 'vitest/node'
+import tsconfigPaths from 'vite-tsconfig-paths'
 import { globby } from 'globby'
 
 export const inject = ['yakumo', 'cli']
@@ -49,6 +50,8 @@ export function apply(ctx: Context) {
             reporter: options['coverage.reporter'],
           },
         } : {},
+      }, {
+        plugins: [tsconfigPaths()],
       })
 
       if (!vitest) {
