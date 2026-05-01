@@ -12,6 +12,8 @@ export function apply(ctx: Context) {
     .option('-u, --update', 'Update snapshots')
     .option('-b, --bail [bail:integer]', 'Stop after first N failures')
     .option('-t, --test-timeout [ms:integer]', 'Per-test timeout in milliseconds')
+    .option('--coverage', 'Collect coverage (requires @vitest/coverage-v8)')
+    .option('--coverage.reporter [...reporter]', 'Coverage reporter(s): text, html, json, lcov, ...')
     .action(async ({ args, options }) => {
       await ctx.yakumo.initialize()
 
@@ -40,6 +42,13 @@ export function apply(ctx: Context) {
         testTimeout: options.testTimeout,
         passWithNoTests: true,
         root: ctx.yakumo.cwd,
+        ...options.coverage ? {
+          coverage: {
+            enabled: true,
+            provider: 'v8',
+            reporter: options['coverage.reporter'],
+          },
+        } : {},
       })
 
       if (!vitest) {

@@ -25,6 +25,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - name: Check out
         uses: actions/checkout@v6
@@ -37,7 +41,15 @@ jobs:
       - name: Install
         run: yarn --no-immutable
       - name: Build
-        run: yarn tsc -b
+        run: yarn build
+      - name: Publish
+        if: >-
+          github.event_name == 'push' &&
+          contains(fromJson('["refs/heads/main"]'), github.ref)
+        run: |-
+          yarn config set npmPublishProvenance true
+          yarn config set npmRegistryServer https://registry.npmjs.org/
+          yarn yakumo publish --debug
 
   test:
     runs-on: ubuntu-latest
@@ -58,8 +70,6 @@ jobs:
         run: corepack enable
       - name: Install
         run: yarn --no-immutable
-      - name: Build
-        run: yarn tsc -b
       - name: Unit Test
         run: yarn test:json
       - name: Report Coverage

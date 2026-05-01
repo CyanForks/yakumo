@@ -2,7 +2,7 @@
 
 [![downloads](https://img.shields.io/npm/dm/yakumo?style=flat-square)](https://www.npmjs.com/package/yakumo)
 [![npm](https://img.shields.io/npm/v/yakumo?style=flat-square)](https://www.npmjs.com/package/yakumo)
-[![GitHub](https://img.shields.io/github/license/shigma/yakumo?style=flat-square)](https://github.com/shigma/yakumo/blob/master/LICENSE)
+[![GitHub](https://img.shields.io/github/license/cordiverse/yakumo?style=flat-square)](https://github.com/cordiverse/yakumo/blob/main/LICENSE)
 
 Manage complex workspaces with ease.
 

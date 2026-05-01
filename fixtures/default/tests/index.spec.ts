@@ -1,5 +1,5 @@
 import { testExec } from '@yakumojs/test-utils'
-import { describe } from 'node:test'
+import { describe } from 'vitest'
 
 describe('basic', () => {
   // no args: shows help

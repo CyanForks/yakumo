@@ -1,7 +1,10 @@
-import { spawn } from 'child_process'
-import { equal } from 'assert'
-import { it as test } from 'node:test'
-import path from 'path'
+import { spawn } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
+import assert from 'node:assert'
+import { it } from 'vitest'
+
+const cliPath = fileURLToPath(new URL('../../core/src/cli.ts', import.meta.url))
+const fixtureDir = fileURLToPath(new URL('../../../fixtures/default/', import.meta.url))
 
 export interface TestExecOptions {
   args: string[]
@@ -10,14 +13,18 @@ export interface TestExecOptions {
 
 export function testExec(options: TestExecOptions) {
   const command = options.args.join(' ')
-  test(command, (t, done) => {
-    const child = spawn(process.execPath, ['--import', 'tsx', require.resolve('yakumo/src/cli'), ...options.args], {
-      cwd: path.resolve(__dirname, '../../../fixtures/default'),
+  it(command, () => new Promise<void>((resolve, reject) => {
+    const child = spawn(process.execPath, ['--import', 'tsx', cliPath, ...options.args], {
+      cwd: fixtureDir,
       stdio: 'inherit',
     })
     child.on('close', (code) => {
-      equal(code, options.code ?? 0)
-      done()
+      try {
+        assert.strictEqual(code, options.code ?? 0)
+        resolve()
+      } catch (err) {
+        reject(err)
+      }
     })
-  })
+  }))
 }

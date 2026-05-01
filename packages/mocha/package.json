@@ -12,13 +12,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shigma/yakumo.git",
+    "url": "git+https://github.com/cordiverse/yakumo.git",
     "directory": "packages/mocha"
   },
   "bugs": {
-    "url": "https://github.com/shigma/yakumo/issues"
+    "url": "https://github.com/cordiverse/yakumo/issues"
   },
-  "homepage": "https://github.com/shigma/yakumo",
+  "homepage": "https://github.com/cordiverse/yakumo",
   "keywords": [
     "monorepo",
     "workspace",

@@ -1,3 +1,7 @@
 - name: yakumo
+  config:
+    alias:
+      yakumo-test: /fixtures/default
 - name: yakumo-esbuild
 - name: yakumo-tsc
+- name: yakumo-vitest

@@ -1,7 +1,7 @@
 {
   "name": "yakumo-vitest",
   "description": "Vitest support for Yakumo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "type": "module",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -12,13 +12,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shigma/yakumo.git",
+    "url": "git+https://github.com/cordiverse/yakumo.git",
     "directory": "packages/vitest"
   },
   "bugs": {
-    "url": "https://github.com/shigma/yakumo/issues"
+    "url": "https://github.com/cordiverse/yakumo/issues"
   },
-  "homepage": "https://github.com/shigma/yakumo",
+  "homepage": "https://github.com/cordiverse/yakumo",
   "keywords": [
     "monorepo",
     "workspace",
