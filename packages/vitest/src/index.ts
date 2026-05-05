@@ -74,6 +74,7 @@ export function apply(ctx: Context) {
       const watched: Vitest[] = []
       let totalFailed = 0
       for (const [root, files] of groups) {
+        const testTsConfig = resolve(root, 'tsconfig.test.json')
         const vitest = await startVitest('test', files, {
           watch: !!options.watch,
           update: !!options.update,
@@ -89,7 +90,7 @@ export function apply(ctx: Context) {
             },
           } : {},
         }, {
-          plugins: [tsconfigPaths()],
+          plugins: [tsconfigPaths(existsSync(testTsConfig) ? { projects: [testTsConfig] } : {})],
         })
 
         if (!vitest) {
