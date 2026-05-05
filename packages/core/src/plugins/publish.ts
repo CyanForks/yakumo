@@ -3,6 +3,7 @@ import { cwd, exit, Manager, PackageJson, spawnAsync } from '../index.js'
 import { maxSatisfying, prerelease } from 'semver'
 import { Awaitable } from 'cosmokit'
 import { join } from 'node:path'
+import { appendFile } from 'node:fs/promises'
 import { fetchRemote } from '../utils.js'
 import ora from 'ora'
 import prompts from 'prompts'
@@ -100,7 +101,15 @@ export function apply(ctx: Context) {
         }
       }
 
-      let progress = 0, skipped = 0, hasError = false
+      interface PublishResult {
+        name: string
+        version: string
+        status: 'published' | 'skipped' | 'failed'
+        error?: string
+      }
+      const results: PublishResult[] = []
+
+      let progress = 0, hasError = false
       let total = Object.keys(constraints).length
       spinner.start(`Checking versions (0/${total})`)
       paths = []
@@ -110,9 +119,7 @@ export function apply(ctx: Context) {
         if (constraint.path) {
           const meta = ctx.yakumo.workspaces[constraint.path]
           if (versions.includes(meta.version)) {
-            spinner.warn(`${name}@${meta.version} already published.`)
-            hasMessage = true
-            skipped += 1
+            results.push({ name, version: meta.version, status: 'skipped' })
           } else {
             versions.push(meta.version)
             paths.push(constraint.path)
@@ -142,7 +149,7 @@ export function apply(ctx: Context) {
         spinner.start(`Publishing packages (0/${total})`)
       }
 
-      let completed = 0, failed = 0
+      let completed = 0
       await (options.debug ? serial : parallel)(paths, async (path) => {
         const meta = ctx.yakumo.workspaces[path]
         try {
@@ -160,19 +167,55 @@ export function apply(ctx: Context) {
               method: 'PUT',
             }).catch(() => {})
           })
+          results.push({ name: meta.name, version: meta.version, status: 'published' })
         } catch (e) {
-          console.log(e)
-          failed++
+          results.push({ name: meta.name, version: meta.version, status: 'failed', error: String(e) })
         } finally {
           if (!options.debug) spinner.text = `Publishing packages (${++completed}/${total})`
         }
       })
 
+      const skipped = results.filter(r => r.status === 'skipped').length
+      const published = results.filter(r => r.status === 'published').length
+      const failed = results.filter(r => r.status === 'failed').length
+
       const skippedText = skipped ? `, ${skipped} skipped` : ''
       if (failed) {
-        spinner.fail(`Published ${total - failed} packages, ${failed} failed${skippedText}.`)
+        spinner.fail(`Published ${published} packages, ${failed} failed${skippedText}.`)
       } else {
-        spinner.succeed(`Published ${total} packages${skippedText}.`)
+        spinner.succeed(`Published ${published} packages${skippedText}.`)
       }
+
+      if (results.length) {
+        results.sort((a, b) => a.name.localeCompare(b.name))
+        console.log()
+        for (const r of results) {
+          const label = r.status === 'published' ? '  published'
+            : r.status === 'skipped' ? '    skipped'
+              : '     failed'
+          console.log(`${label}  ${r.name}@${r.version}`)
+          if (r.error) console.log(`            ${r.error}`)
+        }
+      }
+
+      if (process.env.GITHUB_STEP_SUMMARY && results.length) {
+        const icon = (s: PublishResult['status']) =>
+          s === 'published' ? ':white_check_mark: Published'
+            : s === 'skipped' ? ':fast_forward: Skipped'
+              : ':x: Failed'
+        const lines = [
+          '## Publish Summary',
+          '',
+          `Published ${published}, skipped ${skipped}, failed ${failed}.`,
+          '',
+          '| Package | Version | Status |',
+          '| --- | --- | --- |',
+          ...results.map(r => `| \`${r.name}\` | \`${r.version}\` | ${icon(r.status)} |`),
+          '',
+        ]
+        await appendFile(process.env.GITHUB_STEP_SUMMARY, lines.join('\n')).catch(() => {})
+      }
+
+      if (failed) process.exit(Math.min(failed, 255))
     })
 }
